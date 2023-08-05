@@ -27,6 +27,17 @@ class Cat(models.Model):
         User, related_name='cats', on_delete=models.CASCADE)
     achievements = models.ManyToManyField(Achievement, through='AchievementCat')
 
+    class Meta:
+        # Чтобы не было у одного хозяина кошки в этой же кличкой (исключить дублирование)
+        # возможно скоро будет устаревшим метод
+        # unique_together = ('name', 'owner')
+        
+        # новый метод
+        # Также добавить в сериализатор
+        constraints = [
+            models.UniqueConstraint(fields=['name', 'owner'], name='unique_name_owner')
+        ]
+
     def __str__(self):
         return self.name
 
